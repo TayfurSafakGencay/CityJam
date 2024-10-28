@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Collector;
 using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
 using Enum;
 using Interface;
 using Managers;
@@ -13,8 +13,12 @@ public class CollectableObject : MonoBehaviour, IClickable
     private CollectableObjectKey _key;
 
     public Action OnAnimationEnd;
+
+    private bool _clicked;
     public void OnClick()
     {
+        if (_clicked) return;
+        _clicked = true;
         CollectorManager.Instance.FillingCollector(this);
     }
 
@@ -26,30 +30,93 @@ public class CollectableObject : MonoBehaviour, IClickable
         });
     }
     
-    public void PlayPlacedAnimation(float animationDuration)
-    {
-        transform.DOMoveY(transform.position.y - 0.03f, animationDuration / 2).OnComplete(() =>
-        {
-            transform.DOMoveY(transform.position.y + 0.03f, animationDuration / 2);
-        });
-    }
+    private const float _matchingAnimationDuration = 0.85f;
     
-    private const float _matchingAnimationDuration = 1f;
-
-    public Tween PlayMatchingAnimation(Transform middleCollectableObject)
+    private const float _matchingAnimationHeight = 0.5f;
+    private const float _matchingAnimationRight = 0.25f;
+    private const float _matchingAnimationXAxisLeft = -0.25f;
+    
+    private const Ease _matchingAnimationEase = Ease.InCubic;
+    
+    public void PlayMatchingAnimation(List<CollectorView> collectorViews)
     {
-        return transform.DOMoveY(transform.position.y + 0.5f, _matchingAnimationDuration).OnComplete(() =>
+        if (collectorViews[0].GetCollectableObject() == this)
         {
-            transform.DOMove(middleCollectableObject.position, _matchingAnimationDuration).onComplete += () =>
+            transform.DOMove(transform.position + new Vector3(_matchingAnimationXAxisLeft, _matchingAnimationHeight,0), _matchingAnimationDuration)
+                .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
-                Destroy(gameObject);
-            };
+                transform.DOMove(collectorViews[1].GetCollectableObject().transform.position, _matchingAnimationDuration).SetEase(_matchingAnimationEase).OnComplete(() =>
+                {
+                    collectorViews[0].Remove();
+                    Destroy(gameObject);
+                });
+            });
+        }
+        else if (collectorViews[1].GetCollectableObject() == this)
+        {
+            transform.DOMove(transform.position + new Vector3(0, _matchingAnimationHeight,0), _matchingAnimationDuration)
+                .SetEase(_matchingAnimationEase).OnComplete(() =>
+            {
+                transform.DOScale(transform.localScale * 1.25f, _matchingAnimationDuration * 1.5f).OnComplete(() =>
+                {
+                    collectorViews[1].Remove();
+                    CollectorManager.Instance.SlideToLeft();
+                    Destroy(gameObject);
+                });
+            });
+        }
+        else if (collectorViews[2].GetCollectableObject() == this)
+        {
+            transform.DOMove(transform.position + new Vector3(_matchingAnimationRight, _matchingAnimationHeight,0), _matchingAnimationDuration)
+                .SetEase(_matchingAnimationEase).OnComplete(() =>
+                {
+                    transform.DOMove(collectorViews[1].GetCollectableObject().transform.position, _matchingAnimationDuration).SetEase(_matchingAnimationEase).OnComplete(() =>
+                    {
+                        collectorViews[2].Remove();
+                        Destroy(gameObject);
+                    });
+                });
+        }
+    }
 
-            if (middleCollectableObject == transform)
-            {
-                transform.DOScale(transform.localScale * 1.25f, _matchingAnimationDuration);
-            }
-        });
+    public void SlideToLeft(int index)
+    {
+        if (index == 0)
+        {
+            return;
+        }
+        
+        index--;
+
+        if (CollectorManager.Instance.CollectorViews[index].GetCollectableObjectKey() != CollectableObjectKey.None) return;
+        CollectorManager.Instance.CollectorViews[index].Filling(this, false);
+        CollectorManager.Instance.CollectorViews[index + 1].Remove();
+        SlideAnimation(index);
+    }
+
+    private void SlideAnimation(int index)
+    {
+        CollectorView collectorView = CollectorManager.Instance.CollectorViews[index];
+        float height = collectorView.PlacementHeight;
+        float duration = 0.2f;
+
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(
+            transform.DOMoveX(collectorView.transform.position.x, duration).SetEase(Ease.Linear) // X ekseni boyunca hareket
+        );
+
+        sequence.Join(
+            transform.DOMoveY(collectorView.transform.position.y + 0.2f, duration / 2).SetEase(Ease.OutQuad) // Y ekseni boyunca yükselme
+                .OnComplete(() =>
+                {
+                    transform.DOMoveY(collectorView.transform.position.y + height, duration / 2).SetEase(Ease.InQuad).OnComplete(() =>
+                    {
+                        CollectorManager.Instance.CollectorViews[index].Slided();
+                        SlideToLeft(index);
+                    });
+                })
+        );
     }
 
     public CollectableObjectKey GetKey()

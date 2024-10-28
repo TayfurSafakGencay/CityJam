@@ -39,7 +39,7 @@ namespace Managers
 
     private const int RequiredMatchingCount = 3;
     
-    public bool CheckMatching(CollectableObjectKey collectableObjectKey)
+    public void CheckMatching(CollectableObjectKey collectableObjectKey)
     {
       List<CollectorView> _targetCollectorViews = new();
       
@@ -52,14 +52,26 @@ namespace Managers
         if (_targetCollectorViews.Count == RequiredMatchingCount) break;
       }
 
-      if (_targetCollectorViews.Count != RequiredMatchingCount) return false;
-      // TODO: Eger bir collect animasyonu varsa yana kayma oynamiyor.
+      if (_targetCollectorViews.Count != RequiredMatchingCount) return;
+
       foreach (CollectorView targetCollectorView in _targetCollectorViews)
       {
-        targetCollectorView.Matched(_targetCollectorViews[1].GetCollectableObject().transform);
+        targetCollectorView.Matched(_targetCollectorViews);
       }
+    }
 
-      return true;
+    public void SlideToLeft()
+    {
+      for (int i = 0; i < CollectorViews.Count; i++)
+      {
+        CollectorView collectorView = CollectorViews[i];
+        if (i == 0) continue;
+        
+        if (collectorView.GetCollectableObjectKey() != CollectableObjectKey.None)
+        {
+          collectorView.GetCollectableObject().SlideToLeft(i);
+        }
+      }
     }
   }
 }

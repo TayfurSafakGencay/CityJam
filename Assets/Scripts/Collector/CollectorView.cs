@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Collections.Generic;
+using DG.Tweening;
 using Enum;
 using Managers;
 using UnityEngine;
@@ -13,42 +14,61 @@ namespace Collector
     
     private bool _isAnimationPlaying;
     
+    private bool _isMatched;
+    
     private CollectorManager _collectorManager;
+    
+    private Vector3 _initialPosition;
 
     private void Awake()
     {
-        _collectorManager = CollectorManager.Instance;
+        _initialPosition = transform.position;
     }
 
-    public void Filling(CollectableObject collectableObject)
+    private void Start()
+    {
+      _collectorManager = CollectorManager.Instance;
+    }
+
+    public void Filling(CollectableObject collectableObject, bool isNew = true)
     {
       _collectableObject = collectableObject;
       _isAnimationPlaying = true;
       _isFilled = true;
       collectableObject.OnAnimationEnd += Fill;
-      PlacingAnimation();
+      if (isNew) 
+        PlacingAnimation();
     }
 
     private void Fill()
     {
       _isAnimationPlaying = false;
-      
-      if (_collectorManager.CheckMatching(_collectableObject.GetKey()))
-      {
-        return;
-      }
+
+      _collectorManager.CheckMatching(_collectableObject.GetKey());
       
       PlacedAnimation();
     }
 
-    public void Matched(Transform middleCollectableObject)
+    public void Slided()
     {
-      MatchingAnimations(middleCollectableObject);
+      _isAnimationPlaying = false;
+      
+      _collectorManager.CheckMatching(_collectableObject.GetKey());
+
+      SlideToLeft();
+    }
+
+    public void Matched(List<CollectorView> collectableObjects)
+    {
+      _isMatched = true;
+      MatchingAnimations(collectableObjects);
     }
 
     public void Remove()
     {
       _isFilled = false;
+      _isMatched = false;
+      _isAnimationPlaying = false;
       _collectableObject.OnAnimationEnd -= Fill;
       _collectableObject = null;
     }
@@ -65,35 +85,79 @@ namespace Collector
 
     public bool IsMatchable()
     {
-      return !_isAnimationPlaying && _isFilled;
+      return !_isAnimationPlaying && _isFilled && !_isMatched;
     }
     
     #region Animtions
-
+    
+    [HideInInspector]
+    public float PlacementHeight = 0.03f;
     private void PlacingAnimation()
     {
-      _collectableObject.PlayPlacingAnimation(transform.position + new Vector3(0, 0.03f, 0));
+      _collectableObject.PlayPlacingAnimation(transform.position + new Vector3(0, PlacementHeight, 0));
     }
 
-    private const float _placingAnimationDuration = 0.2f;
-    public Tween PlacedAnimation()
+    private const float _placingAnimationDuration = 0.15f;
+    
+    private const Ease _placingAnimationEase = Ease.InOutSine;
+    
+    private Sequence _placingSequence;
+    public void PlacedAnimation()
     {
-      _collectableObject.PlayPlacedAnimation(_placingAnimationDuration);
+      _placingSequence = DOTween.Sequence();
+      float currentBounceAmount = 0.03f;
+      float currentDuration = _placingAnimationDuration;
 
-      return transform.DOMoveY(transform.position.y - 0.03f, _placingAnimationDuration / 2).OnComplete(() =>
+      for (int i = 0; i < 3; i++)
       {
-        transform.DOMoveY(transform.position.y + 0.03f, _placingAnimationDuration / 2);
+        if (i % 2 == 0)
+        {
+          _placingSequence.Append(transform.DOMoveY(transform.position.y - currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
+          _placingSequence.Join(_collectableObject.transform.DOMoveY
+            (transform.position.y + PlacementHeight - currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
+        }
+        else
+        {
+          _placingSequence.Append(transform.DOMoveY(transform.position.y + currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
+          _placingSequence.Join(_collectableObject.transform.DOMoveY
+            (transform.position.y + PlacementHeight + currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
+        }
+
+        currentBounceAmount *= 0.9f;
+        currentDuration *= 0.75f;
+      }
+
+      _placingSequence.Append(transform.DOMove(_initialPosition, currentDuration).SetEase(_placingAnimationEase));
+      _placingSequence.Join(_collectableObject.transform.DOMoveY
+        (transform.position.y + PlacementHeight, currentDuration).SetEase(_placingAnimationEase));
+    }
+
+    public void MatchingAnimations(List<CollectorView> collectableObjects)
+    {
+      _placingSequence.Pause();
+      _collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
+      transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
+      {
+        transform.DOMoveY(_initialPosition.y - PlacementHeight, 0.1f).OnComplete(() =>
+        {
+          transform.DOMove(_initialPosition, 0.1f);
+        });
+        
+        _collectableObject.transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
+        {
+          _collectableObject.PlayMatchingAnimation(collectableObjects);
+        });
       });
     }
-
-    public void MatchingAnimations(Transform middleCollectableObject)
+    
+    public void SlideToLeft()
     {
-      PlacedAnimation().onComplete += () =>
+      transform.DOMoveY(_initialPosition.y - PlacementHeight, 0.1f).OnComplete(() =>
       {
-        _collectableObject.PlayMatchingAnimation(middleCollectableObject).onComplete += Remove;
-      };
+        transform.DOMove(_initialPosition, 0.1f);
+      });
     }
-
+    
     #endregion
   }
 }

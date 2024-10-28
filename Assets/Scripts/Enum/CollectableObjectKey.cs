@@ -3,6 +3,7 @@
   public enum CollectableObjectKey
   {
     None,
-    Building12
+    Building12,
+    Building13,
   }
 }
