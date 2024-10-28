@@ -15,6 +15,12 @@ public class CollectableObject : MonoBehaviour, IClickable
     public Action OnAnimationEnd;
 
     private bool _clicked;
+
+    private void Start()
+    {
+        CollectorManager.Instance.TotalCollectableObjects++;
+    }
+
     public void OnClick()
     {
         if (_clicked) return;
@@ -61,6 +67,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 {
                     collectorViews[1].Remove();
                     CollectorManager.Instance.SlideToLeft();
+                    CollectorManager.Instance.CheckWinCondition();
                     Destroy(gameObject);
                 });
             });
@@ -81,6 +88,7 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     public void SlideToLeft(int index)
     {
+        // TODO: Safak: Match animasyonu oynarken sliding yapiyor.
         if (index == 0)
         {
             return;

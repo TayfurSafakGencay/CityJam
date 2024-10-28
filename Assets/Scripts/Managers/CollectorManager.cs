@@ -52,12 +52,39 @@ namespace Managers
         if (_targetCollectorViews.Count == RequiredMatchingCount) break;
       }
 
-      if (_targetCollectorViews.Count != RequiredMatchingCount) return;
-
-      foreach (CollectorView targetCollectorView in _targetCollectorViews)
+      if (_targetCollectorViews.Count == RequiredMatchingCount)
       {
-        targetCollectorView.Matched(_targetCollectorViews);
+        foreach (CollectorView targetCollectorView in _targetCollectorViews)
+        {
+          targetCollectorView.Matched(_targetCollectorViews);
+          TotalCollectableObjects--;
+        }
+        
+        return;
       }
+
+      CheckLoseCondition();
+    }
+    
+    public void CheckLoseCondition()
+    {
+      foreach (CollectorView collectorView in CollectorViews)
+      {
+        if (collectorView.GetCollectableObjectKey() == CollectableObjectKey.None) return;
+      }
+      
+      LevelManager.Instance.Lose();
+    }
+
+    public void CheckWinCondition()
+    {
+      foreach (CollectorView collectorView in CollectorViews)
+      {
+        if (collectorView.GetCollectableObjectKey() != CollectableObjectKey.None) return;
+      }
+      
+      if(TotalCollectableObjects == 0)
+        LevelManager.Instance.Win();
     }
 
     public void SlideToLeft()
