@@ -30,7 +30,6 @@ public class Click : MonoBehaviour
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
     // Binalar daha guzel gorunmeli
-    // yol ve cimen eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
     // particller eklenecek.
     // Altin kazanma yapilacak.
