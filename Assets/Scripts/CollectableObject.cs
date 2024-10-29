@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Collector;
 using DG.Tweening;
 using Enum;
@@ -17,11 +18,18 @@ public class CollectableObject : MonoBehaviour, IClickable
     private bool _clicked;
     
     private bool _isMatched;
+    
+    private Outline _outline;
+
+    private void Awake()
+    {
+        _outline = GetComponent<Outline>();
+        _outline.enabled = false;
+    }
 
     private void Start()
     {
         CollectorManager.Instance.TotalCollectableObjects++;
-        
     }
 
     public void OnClick()
@@ -29,14 +37,28 @@ public class CollectableObject : MonoBehaviour, IClickable
         if (_clicked) return;
         _clicked = true;
 
+        OutlineEffect();
+
+        CollectorManager.Instance.FillingCollector(this);
+    }
+
+    private async void OutlineEffect()
+    {
+        _outline.enabled = true;
+
+        await Task.Delay(600);
+
         Transform[] allChildren = GetComponentsInChildren<Transform>(true);
 
         foreach (Transform child in allChildren)
         {
             child.gameObject.layer = 6;
         }
-
-        CollectorManager.Instance.FillingCollector(this);
+        
+        if (_outline != null)
+        { 
+            _outline.enabled = false;
+        }
     }
 
     public void PlayPlacingAnimation(Vector3 targetPosition)

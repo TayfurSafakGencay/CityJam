@@ -24,19 +24,19 @@ public class Click : MonoBehaviour
     }
     
     // TODO: Safak 
-    // InGame panel ve UI yapilacak. shine effect eklenebilir
     // 4 Level eklenecek.
     // Post Processing eklenecek.
     // Animasyonlar daha akici hale getirilecek.
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
-    // Level gecisleri yapilacak.
     // Binalar daha guzel gorunmeli
     // yol ve cimen eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
-    // Outline effect eklenecek.
     // particller eklenecek.
+    // Altin kazanma yapilacak.
+    
+    // InGame panel ve UI yapilacak. shine effect eklenebilir
     // textler guzel hale getirelecek. Parking orderdan alinabilir.
     // Settings
-    // Altin kazanma yapilacak.
+    // Timer
 }

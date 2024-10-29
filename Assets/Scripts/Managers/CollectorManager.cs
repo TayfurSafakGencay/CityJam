@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Collector;
 using Enum;
 using UnityEngine;
@@ -24,6 +25,19 @@ namespace Managers
       {
         CollectorView child = transform.GetChild(i).GetComponent<CollectorView>();
         CollectorViews.Add(child);
+      }
+    }
+
+    private void Start()
+    {
+      GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged()
+    {
+      if (GameManager.Instance.GameState == GameState.Game)
+      {
+        TotalCollectableObjects = 0;
       }
     }
 
@@ -73,7 +87,7 @@ namespace Managers
         if (collectorView.GetCollectableObjectKey() == CollectableObjectKey.None) return;
       }
       
-      LevelManager.Instance.Lose();
+      LevelManager.Lose();
     }
 
     public void CheckWinCondition()
@@ -84,7 +98,7 @@ namespace Managers
       }
       
       if(TotalCollectableObjects == 0)
-        LevelManager.Instance.Win();
+        LevelManager.Win();
     }
 
     public void SlideToLeft()

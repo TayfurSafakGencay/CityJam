@@ -28,6 +28,15 @@ namespace Collector
     private void Start()
     {
       _collectorManager = CollectorManager.Instance;
+      GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged()
+    {
+      if (GameManager.Instance.GameState == GameState.Game)
+      {
+        Remove();
+      }
     }
 
     public void Filling(CollectableObject collectableObject, bool isNew = true)
@@ -69,6 +78,8 @@ namespace Collector
       _isFilled = false;
       _isMatched = false;
       _isAnimationPlaying = false;
+
+      if (_collectableObject == null) return;
       _collectableObject.OnAnimationEnd -= Fill;
       _collectableObject = null;
     }

@@ -18,49 +18,60 @@ namespace Managers
 
     private void Start()
     {
-      LoadNextLevel();
+      Level++;
+      LoadLevel(Level);
     }
 
-    public void Win()
+    public static void Win()
     {
       GameManager.Instance.ChangeGameState(GameState.Win);
     }
     
-    public void Lose()
+    public static void Lose()
     {
       GameManager.Instance.ChangeGameState(GameState.Lose);
     }
 
-    public void LoadNextLevel()
+    public async void LoadNextLevel()
     {
+      EffectManager.Instance.OpenVignette();
+
+      await EffectManager.WaitVignette();
+
       Level++;
       
       LoadLevel(Level);
     }
 
-    public void Restart()
+    public async void Restart()
     {
+      EffectManager.Instance.OpenVignette();
+      
+      await EffectManager.WaitVignette();
+
       LoadLevel(Level);
     }
     
     private AsyncOperationHandle<GameObject> _levelHandle;
+    
+    private GameObject _levelObject;
 
     private void LoadLevel(int level)
     {
       if (_levelHandle.IsValid())
       {
         _levelHandle.Release();
+        Destroy(_levelObject);
       }
-      
+
       _levelHandle = Addressables.LoadAssetAsync<GameObject>("Level" + level);
       
       _levelHandle.Completed += handle =>
       {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-          Instantiate(handle.Result);
-          GameManager.Instance.ChangeGameState(GameState.Game);
-        }
+        if (handle.Status != AsyncOperationStatus.Succeeded) return;
+        _levelObject = Instantiate(handle.Result);
+        GameManager.Instance.ChangeGameState(GameState.Game);
+        EffectManager.Instance.BeforeCloseVignette();
       };
     }
   }
