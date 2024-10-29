@@ -29,7 +29,7 @@ namespace Managers
 
     private void Start()
     {
-      ChangeGameState(GameState.Initial);
+      ChangeGameState(GameState.Game);
     }
 
     public void ChangeGameState(GameState gameState)
@@ -40,8 +40,7 @@ namespace Managers
 
   public enum GameState
   {
-    Initial,
-    InGame,
+    Game,
     Lose,
     Win,
   }

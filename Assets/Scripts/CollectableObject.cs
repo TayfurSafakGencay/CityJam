@@ -15,16 +15,27 @@ public class CollectableObject : MonoBehaviour, IClickable
     public Action OnAnimationEnd;
 
     private bool _clicked;
+    
+    private bool _isMatched;
 
     private void Start()
     {
         CollectorManager.Instance.TotalCollectableObjects++;
+        
     }
 
     public void OnClick()
     {
         if (_clicked) return;
         _clicked = true;
+
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+
+        foreach (Transform child in allChildren)
+        {
+            child.gameObject.layer = 6;
+        }
+
         CollectorManager.Instance.FillingCollector(this);
     }
 
@@ -46,6 +57,8 @@ public class CollectableObject : MonoBehaviour, IClickable
     
     public void PlayMatchingAnimation(List<CollectorView> collectorViews)
     {
+        _isMatched = true;
+        
         if (collectorViews[0].GetCollectableObject() == this)
         {
             transform.DOMove(transform.position + new Vector3(_matchingAnimationXAxisLeft, _matchingAnimationHeight,0), _matchingAnimationDuration)
@@ -88,11 +101,8 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     public void SlideToLeft(int index)
     {
-        // TODO: Safak: Match animasyonu oynarken sliding yapiyor.
-        if (index == 0)
-        {
-            return;
-        }
+        if (_isMatched) return;
+        if (index == 0) return;
         
         index--;
 

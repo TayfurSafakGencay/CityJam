@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -15,34 +14,35 @@ namespace Managers
     {
       if (Instance == null) Instance = this;
       else Destroy(gameObject);
-      
-      GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
     }
 
     private void Start()
     {
-    }
-
-    private void OnGameStateChanged()
-    {
-      if (GameManager.Instance.GameState == GameState.Initial)
-      {
-        Level = 1;
-        LoadLevel(Level);
-      }
+      LoadNextLevel();
     }
 
     public void Win()
     {
-      Level++;
       GameManager.Instance.ChangeGameState(GameState.Win);
     }
-
+    
     public void Lose()
     {
       GameManager.Instance.ChangeGameState(GameState.Lose);
     }
 
+    public void LoadNextLevel()
+    {
+      Level++;
+      
+      LoadLevel(Level);
+    }
+
+    public void Restart()
+    {
+      LoadLevel(Level);
+    }
+    
     private AsyncOperationHandle<GameObject> _levelHandle;
 
     private void LoadLevel(int level)
@@ -59,7 +59,7 @@ namespace Managers
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
           Instantiate(handle.Result);
-          GameManager.Instance.ChangeGameState(GameState.InGame);
+          GameManager.Instance.ChangeGameState(GameState.Game);
         }
       };
     }
