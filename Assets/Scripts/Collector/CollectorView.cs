@@ -108,7 +108,7 @@ namespace Collector
       _collectableObject.PlayPlacingAnimation(transform.position + new Vector3(0, PlacementHeight, 0));
     }
 
-    private const float _placingAnimationDuration = 0.15f;
+    private const float _placingAnimationDuration = 0.2f;
     
     private const Ease _placingAnimationEase = Ease.InOutSine;
     
@@ -116,7 +116,7 @@ namespace Collector
     public void PlacedAnimation()
     {
       _placingSequence = DOTween.Sequence();
-      float currentBounceAmount = 0.03f;
+      float currentBounceAmount = 0.1f;
       float currentDuration = _placingAnimationDuration;
 
       for (int i = 0; i < 3; i++)
@@ -134,8 +134,8 @@ namespace Collector
             (transform.position.y + PlacementHeight + currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
         }
 
-        currentBounceAmount *= 0.9f;
-        currentDuration *= 0.75f;
+        currentBounceAmount *= 0.95f;
+        currentDuration *= 0.85f;
       }
 
       _placingSequence.Append(transform.DOMove(_initialPosition, currentDuration).SetEase(_placingAnimationEase));
@@ -146,6 +146,7 @@ namespace Collector
     public void MatchingAnimations(List<CollectorView> collectableObjects)
     {
       _placingSequence.Pause();
+      
       _collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
       transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
       {

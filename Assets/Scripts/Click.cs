@@ -26,10 +26,9 @@ public class Click : MonoBehaviour
     // TODO: Safak 
     // 4 Level eklenecek.
     // Post Processing eklenecek.
-    // Animasyonlar daha akici hale getirilecek.
+    // Animasyonlar daha akici hale getirilecek. Matching ve placing cakisiyor duzeltilecek.
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
-    // Binalar daha guzel gorunmeli
     // yakinlastirma, uzaaklastirma yapilacak.
     // particller eklenecek.
     // Altin kazanma yapilacak.
