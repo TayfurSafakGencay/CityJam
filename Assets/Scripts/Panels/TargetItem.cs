@@ -44,7 +44,7 @@ namespace Panels
         transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f)
           .SetEase(Ease.InOutBack).OnComplete(() => transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutBack)).OnComplete(() =>
           {
-            transform.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(() => Destroy(gameObject));
+            transform.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(() => gameObject.SetActive(false));
           });
       }
       else

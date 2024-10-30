@@ -19,21 +19,8 @@ namespace Panels
       _timer = 180;
       _isTimerActive = true;
       
-      GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
-    }
-    
-    private void OnDisable()
-    {
-      GameManager.Instance.OnGameStateChanged -= OnGameStateChanged;
-    }
-
-    private void OnGameStateChanged()
-    {
-      if (GameManager.Instance.GameState == GameState.Game)
-      {
-        CloseAllTargets();
-        SetAllTargets();
-      }
+      CloseAllTargets();
+      SetAllTargets();
     }
 
     private void Update()

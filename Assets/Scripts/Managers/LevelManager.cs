@@ -24,11 +24,12 @@ namespace Managers
       
       CollectableObjectConfig.Initialize();
       LevelData.Initialize();
+      
+      Level = 1;
     }
 
     private void Start()
     {
-      Level++;
       LoadLevel(Level);
     }
 
@@ -69,6 +70,7 @@ namespace Managers
     private void LoadLevel(int level)
     {
       SetTargetDataVos();
+      
       
       if (_levelHandle.IsValid())
       {

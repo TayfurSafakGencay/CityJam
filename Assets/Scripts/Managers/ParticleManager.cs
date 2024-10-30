@@ -7,6 +7,8 @@ namespace Managers
 {
   public class ParticleManager : MonoBehaviour
   {
+    public static ParticleManager Instance;
+    
     [SerializeField]
     private Transform _parent;
     
@@ -19,6 +21,12 @@ namespace Managers
     private List<ParticleEffectVo> _instantiateParticleEffects;
 
     private readonly Dictionary<string, ParticleSystem> _instantiateParticleEffectsDictionary = new();
+
+    private void Awake()
+    {
+      if (Instance == null) Instance = this;
+      else Destroy(gameObject);
+    }
 
     private void Start()
     {

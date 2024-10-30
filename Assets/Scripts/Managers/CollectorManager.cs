@@ -71,7 +71,7 @@ namespace Managers
     
     public async void CheckLoseCondition()
     {
-      await Task.Delay(500);
+      await Task.Delay(1000);
       
       foreach (CollectorView collectorView in CollectorViews)
       {

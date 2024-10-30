@@ -30,7 +30,6 @@ public class Click : MonoBehaviour
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
-    // particller eklenecek. Birlesme icin,
     // Water duzenlemesi
     // Match olması rağmen lose ekranı gelmesi düzeltilecek.
     

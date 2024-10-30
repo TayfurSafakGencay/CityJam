@@ -122,6 +122,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                     collectorViews[1].Remove();
                     CollectorManager.Instance.SlideToLeft();
                     LevelManager.Instance.CheckWinCondition(_key);
+                    ParticleManager.Instance.PlayParticleEffectFromPool(transform.position, VFX.Match);
                     Destroy(gameObject);
                 });
             });
