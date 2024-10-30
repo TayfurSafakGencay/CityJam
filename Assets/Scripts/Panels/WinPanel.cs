@@ -11,7 +11,7 @@ namespace Panels
 
     private void OnEnable()
     {
-      _levelText.text = $"Level {LevelManager.Instance.Level}";
+      _levelText.text = LevelManager.Instance.Level < 10 ? $"Level 0{LevelManager.Instance.Level}" : $"Level {LevelManager.Instance.Level}";
     }
 
     public void NextLevel()

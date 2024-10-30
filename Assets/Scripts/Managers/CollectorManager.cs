@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Collector;
 using Enum;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using Task = System.Threading.Tasks.Task;
 
 namespace Managers
 {
@@ -67,8 +69,10 @@ namespace Managers
       CheckLoseCondition();
     }
     
-    public void CheckLoseCondition()
+    public async void CheckLoseCondition()
     {
+      await Task.Delay(500);
+      
       foreach (CollectorView collectorView in CollectorViews)
       {
         if (collectorView.GetCollectableObjectKey() == CollectableObjectKey.None) return;

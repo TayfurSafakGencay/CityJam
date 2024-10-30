@@ -1,4 +1,5 @@
-﻿using Enum;
+﻿using DG.Tweening;
+using Enum;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,8 +41,16 @@ namespace Panels
 
       if (_count == 0)
       {
-        //TODO: Safak: Play animation & particle effect.
-        gameObject.SetActive(false);
+        transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f)
+          .SetEase(Ease.InOutBack).OnComplete(() => transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutBack)).OnComplete(() =>
+          {
+            transform.DOScale(new Vector3(0, 0, 0), 0.3f).OnComplete(() => Destroy(gameObject));
+          });
+      }
+      else
+      {
+        transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.3f)
+          .SetEase(Ease.InOutBack).OnComplete(() => transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.InOutBack));
       }
     }
   }

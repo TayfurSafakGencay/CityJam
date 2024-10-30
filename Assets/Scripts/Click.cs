@@ -30,8 +30,9 @@ public class Click : MonoBehaviour
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
-    // particller eklenecek. Countdown icin, Birlesme icin, Oyun sonu icin.
+    // particller eklenecek. Birlesme icin,
     // Water duzenlemesi
+    // Match olması rağmen lose ekranı gelmesi düzeltilecek.
     
-    // Win ve lose panel. shine effect eklenebilir
+    // Text fontu eklenecke.
 }
