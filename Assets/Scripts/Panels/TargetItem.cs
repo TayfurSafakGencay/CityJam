@@ -13,6 +13,8 @@ namespace Panels
     private Image _image;
 
     public TextMeshProUGUI CountText;
+    
+    public ParticleSystem CounterDownParticle;
 
     private int _count;
 
@@ -34,6 +36,7 @@ namespace Panels
     {
       _count--;
       CountText.text = _count.ToString();
+      CounterDownParticle.Play();
 
       if (_count == 0)
       {

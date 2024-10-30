@@ -31,6 +31,7 @@ public class Click : MonoBehaviour
     // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
     // particller eklenecek. Countdown icin, Birlesme icin, Oyun sonu icin.
+    // Water duzenlemesi
     
     // Win ve lose panel. shine effect eklenebilir
 }
