@@ -41,6 +41,7 @@ public class CollectableObject : MonoBehaviour, IClickable
 
         CollectorManager.Instance.FillingCollector(this);
         CollectorManager.Instance.Clicked(_key);
+        SoundManager.Instance.PlayEffect(SoundManager.Instance.CollectSound);
     }
     
     private const float _moveUpperDuration = 0.4f;
@@ -88,11 +89,11 @@ public class CollectableObject : MonoBehaviour, IClickable
         }
     }
     
-    private const float _matchingAnimationDuration = 0.35f;
+    private const float _matchingAnimationDuration = 0.375f;
     
-    private const float _matchingAnimationHeight = 0.5f;
-    private const float _matchingAnimationRight = 0.2f;
-    private const float _matchingAnimationXAxisLeft = -0.2f;
+    private const float _matchingAnimationHeight = 0.9f;
+    private const float _matchingAnimationRight = 0.175f;
+    private const float _matchingAnimationXAxisLeft = -0.175f;
     
     private const Ease _matchingAnimationEase = Ease.InCubic;
     

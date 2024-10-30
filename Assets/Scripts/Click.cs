@@ -24,13 +24,11 @@ public class Click : MonoBehaviour
     }
     
     // TODO: Safak 
-    // 4 Level eklenecek.
     // Post Processing eklenecek.
-    // Animasyonlar daha akici hale getirilecek. Matching ve placing cakisiyor duzeltilecek.
     // Lighting ayarlamalari yapilacak. Light Baking.
-    // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
     // Water duzenlemesi
     
-    // Text fontu eklenecke.
+    // Music eklenecek.
+    // 4 Level eklenecek.
 }

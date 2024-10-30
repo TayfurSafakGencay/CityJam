@@ -118,7 +118,7 @@ namespace Collector
       _placingSequence = DOTween.Sequence();
       float currentBounceAmount = 0.1f;
       float currentDuration = _placingAnimationDuration;
-
+      
       for (int i = 0; i < 3; i++)
       {
         if (i % 2 == 0)
@@ -133,11 +133,11 @@ namespace Collector
           _placingSequence.Join(_collectableObject.transform.DOMoveY
             (transform.position.y + PlacementHeight + currentBounceAmount, currentDuration).SetEase(_placingAnimationEase));
         }
-
+      
         currentBounceAmount *= 0.95f;
         currentDuration *= 0.85f;
       }
-
+      
       _placingSequence.Append(transform.DOMove(_initialPosition, currentDuration).SetEase(_placingAnimationEase));
       _placingSequence.Join(_collectableObject.transform.DOMoveY
         (transform.position.y + PlacementHeight, currentDuration).SetEase(_placingAnimationEase));
@@ -145,17 +145,18 @@ namespace Collector
 
     public void MatchingAnimations(List<CollectorView> collectableObjects)
     {
+      _placingSequence.Kill();
       _placingSequence.Pause();
       
       _collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
       transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
       {
-        transform.DOMoveY(_initialPosition.y - PlacementHeight, 0.1f).OnComplete(() =>
+        transform.DOMoveY(_initialPosition.y - PlacementHeight - 0.15f, 0.4f).OnComplete(() =>
         {
-          transform.DOMove(_initialPosition, 0.1f);
+          transform.DOMove(_initialPosition, 0.5f);
         });
         
-        _collectableObject.transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
+        _collectableObject.transform.DOMoveY(_initialPosition.y - 0.15f, 0.4f).OnComplete(() =>
         {
           _collectableObject.PlayMatchingAnimation(collectableObjects);
         });
