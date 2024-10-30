@@ -9,16 +9,16 @@ namespace Panels
   public class InGamePanel : MonoBehaviour
   {
     public TextMeshProUGUI TimerText;
-    
+
     private float _timer;
-    
+
     private bool _isTimerActive;
 
     private void OnEnable()
     {
       _timer = 180;
       _isTimerActive = true;
-      
+
       CloseAllTargets();
       SetAllTargets();
     }
@@ -26,7 +26,7 @@ namespace Panels
     private void Update()
     {
       if (!_isTimerActive) return;
-      
+
       _timer -= Time.deltaTime;
       TimerText.text = _timer.ToString("F0");
 
@@ -37,7 +37,7 @@ namespace Panels
 
     [SerializeField]
     private List<TargetItem> _targets;
-    
+
     private void CloseAllTargets()
     {
       foreach (TargetItem target in _targets)
@@ -56,9 +56,11 @@ namespace Panels
         {
           return;
         }
+
         TargetDataVo item = targetsData[i];
 
-        _targets[i].SetInitialValues(item.Image, item.Count, item.CollectableObjectKey);  
+        _targets[i].SetInitialValues(item.Image, item.Count, item.CollectableObjectKey);
+        _targets[i].transform.localScale = Vector3.one;
         _targets[i].gameObject.SetActive(true);
       }
     }

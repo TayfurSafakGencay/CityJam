@@ -15,7 +15,21 @@ MonoBehaviour:
   LevelDataVos:
   - Level: 1
     LevelVos:
-    - CollectableObjectKey: 2
-      Count: 3
     - CollectableObjectKey: 1
+      Count: 3
+    - CollectableObjectKey: 4
+      Count: 3
+  - Level: 2
+    LevelVos:
+    - CollectableObjectKey: 1
+      Count: 3
+    - CollectableObjectKey: 5
+      Count: 3
+  - Level: 3
+    LevelVos:
+    - CollectableObjectKey: 2
       Count: 6
+    - CollectableObjectKey: 8
+      Count: 6
+    - CollectableObjectKey: 7
+      Count: 3

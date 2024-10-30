@@ -16,8 +16,16 @@ MonoBehaviour:
   - Image: {fileID: 21300000, guid: ddc93410f56a5244380ff3776a21f651, type: 3}
     Key: 1
   - Image: {fileID: 21300000, guid: 6a15205e3dc820241a475386b031a4c7, type: 3}
-    Key: 2
-  - Image: {fileID: 21300000, guid: 0dd317be995864240b2c99a9045c0e09, type: 3}
-    Key: 3
-  - Image: {fileID: 21300000, guid: 3895dd2801f6b84479dcde2f752b14c0, type: 3}
     Key: 4
+  - Image: {fileID: 21300000, guid: 0dd317be995864240b2c99a9045c0e09, type: 3}
+    Key: 5
+  - Image: {fileID: 21300000, guid: 3895dd2801f6b84479dcde2f752b14c0, type: 3}
+    Key: 6
+  - Image: {fileID: 21300000, guid: b9ee9de0c1abea04682bbb5e4c1a58e8, type: 3}
+    Key: 8
+  - Image: {fileID: 21300000, guid: a604c4f7e50e83b4691589259fc341cb, type: 3}
+    Key: 2
+  - Image: {fileID: 21300000, guid: c054f152ad1784c4e91fdc567343eadb, type: 3}
+    Key: 3
+  - Image: {fileID: 21300000, guid: b910e9aff152f074d945c59f7852c9f7, type: 3}
+    Key: 7

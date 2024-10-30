@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Rendering;
 using Task = System.Threading.Tasks.Task;
 
 namespace Managers
@@ -9,9 +8,11 @@ namespace Managers
   {
     public static EffectManager Instance;
 
-    public VolumeProfile VolumeProfile;
-
     public Q_Vignette_Single VignetteSingle;
+
+    public Transform BackCam;
+    
+    public Transform FrontCam;
 
     private void Awake()
     {
@@ -19,7 +20,7 @@ namespace Managers
       else Destroy(gameObject);
     }
 
-    private const float VignetteMainScaleAnimationTime = 1f;
+    private const float VignetteMainScaleAnimationTime = 0.65f;
 
     private bool _isVignetteOpen;
     public void OpenVignette()
@@ -59,11 +60,16 @@ namespace Managers
       }, 0f, VignetteMainScaleAnimationTime).SetEase(Ease.OutQuad);
     }
 
-    public const int VignetteExtraTime = 500;
+    public const int VignetteExtraTime = 200;
 
     public static async Task WaitVignette()
     {
       await Task.Delay(VignetteExtraTime);
+    }
+
+    public float GetCameraDistance()
+    {
+      return BackCam.position.y - FrontCam.position.y;
     }
   }
 }

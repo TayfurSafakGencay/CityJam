@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58da74b4863cadd4083f7e330c386acc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _key: 4
+  _key: 6
   _collectedRotation: {x: 0, y: 270, z: 0}
   _collectedScale: {x: 0.5, y: 0.5, z: 0.5}
 --- !u!114 &5917300999619959981

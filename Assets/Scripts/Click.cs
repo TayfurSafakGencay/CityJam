@@ -26,9 +26,6 @@ public class Click : MonoBehaviour
     // TODO: Safak 
     // Post Processing eklenecek.
     // Lighting ayarlamalari yapilacak. Light Baking.
-    // yakinlastirma, uzaaklastirma yapilacak.
-    // Water duzenlemesi
     
-    // Music eklenecek.
-    // 4 Level eklenecek.
+    // Bazı durumlarda bazı objeler kayma yapmıyor.
 }

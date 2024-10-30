@@ -35,13 +35,10 @@ public class CollectableObject : MonoBehaviour, IClickable
     public void OnClick()
     {
         if (_clicked) return;
-        _clicked = true;
 
         _outline.enabled = true;
 
         CollectorManager.Instance.FillingCollector(this);
-        CollectorManager.Instance.Clicked(_key);
-        SoundManager.Instance.PlayEffect(SoundManager.Instance.CollectSound);
     }
     
     private const float _moveUpperDuration = 0.4f;
@@ -54,6 +51,11 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     public void PlayPlacingAnimation(Vector3 targetPosition)
     {
+        _clicked = true;
+        
+        CollectorManager.Instance.Clicked(_key);
+        SoundManager.Instance.PlayEffect(SoundManager.Instance.CollectSound);
+
         transform.DOLocalMoveY(1f, _moveUpperDuration).OnComplete(() =>
         {
             ChangeLayer();
@@ -75,7 +77,7 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     private void ChangeLayer()
     {
-        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - 1.4f, transform.localPosition.z);
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y - EffectManager.Instance.GetCameraDistance(), transform.localPosition.z);
         Transform[] allChildren = GetComponentsInChildren<Transform>(true);
 
         foreach (Transform child in allChildren)
