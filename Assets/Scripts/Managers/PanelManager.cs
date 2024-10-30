@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Panels;
+using UnityEngine;
 
 namespace Managers
 {
@@ -8,11 +9,11 @@ namespace Managers
     
     private GameManager _gameManager;
     
-    public GameObject InGamePanel;
+    public InGamePanel InGamePanel;
 
-    public GameObject WinPanel;
+    public WinPanel WinPanel;
     
-    public GameObject LosePanel;
+    public LosePanel LosePanel;
 
     private void Awake()
     {
@@ -22,6 +23,8 @@ namespace Managers
 
     private void Start()
     {
+      rectTransform = GetComponent<RectTransform>();
+      
       _gameManager = GameManager.Instance;
       _gameManager.OnGameStateChanged += OnGameStateChanged;
     }
@@ -32,24 +35,44 @@ namespace Managers
       {
         case GameState.Game:
           CloseAllPanels();
-          InGamePanel.SetActive(true);
+          InGamePanel.gameObject.SetActive(true);
           break;
         case GameState.Win:
           CloseAllPanels();
-          WinPanel.SetActive(true);
+          WinPanel.gameObject.SetActive(true);
           break;
         case GameState.Lose:
           CloseAllPanels();
-          LosePanel.SetActive(true);
+          LosePanel.gameObject.SetActive(true);
           break;
       }
     }
 
     private void CloseAllPanels()
     {
-      InGamePanel.SetActive(false);
-      WinPanel.SetActive(false);
-      LosePanel.SetActive(false);
+      InGamePanel.gameObject.SetActive(false);
+      WinPanel.gameObject.SetActive(false);
+      LosePanel.gameObject.SetActive(false);
+    }
+
+    private RectTransform rectTransform;
+
+    private void ApplySafeArea()
+    {
+      Rect safeArea = Screen.safeArea;
+      Vector2 anchorMin = safeArea.position;
+      Vector2 anchorMax = safeArea.position + safeArea.size;
+
+      anchorMin.x /= Screen.width;
+      anchorMin.y /= Screen.height;
+      anchorMax.x /= Screen.width;
+      anchorMax.y /= Screen.height;
+
+      rectTransform.anchorMin = anchorMin;
+      rectTransform.anchorMax = anchorMax;
+      
+      InGamePanel.GetComponent<RectTransform>().anchorMin = anchorMin;
+      InGamePanel.GetComponent<RectTransform>().anchorMax = anchorMax;
     }
   }
 }

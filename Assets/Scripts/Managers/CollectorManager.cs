@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Collector;
 using Enum;
 using UnityEngine;
@@ -13,9 +12,6 @@ namespace Managers
     [HideInInspector]
     public List<CollectorView> CollectorViews;
 
-    [HideInInspector]
-    public int TotalCollectableObjects;
-
     private void Awake()
     {
       if (Instance == null) Instance = this;
@@ -28,19 +24,11 @@ namespace Managers
       }
     }
 
-    private void Start()
+    public void Clicked(CollectableObjectKey collectableObjectKey)
     {
-      GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+      PanelManager.Instance.InGamePanel.Clicked(collectableObjectKey);
     }
-
-    private void OnGameStateChanged()
-    {
-      if (GameManager.Instance.GameState == GameState.Game)
-      {
-        TotalCollectableObjects = 0;
-      }
-    }
-
+    
     public void FillingCollector(CollectableObject collectableObject)
     {
       foreach (CollectorView collectorView in CollectorViews)
@@ -71,7 +59,6 @@ namespace Managers
         foreach (CollectorView targetCollectorView in _targetCollectorViews)
         {
           targetCollectorView.Matched(_targetCollectorViews);
-          TotalCollectableObjects--;
         }
         
         return;
@@ -88,17 +75,6 @@ namespace Managers
       }
       
       LevelManager.Lose();
-    }
-
-    public void CheckWinCondition()
-    {
-      foreach (CollectorView collectorView in CollectorViews)
-      {
-        if (collectorView.GetCollectableObjectKey() != CollectableObjectKey.None) return;
-      }
-      
-      if(TotalCollectableObjects == 0)
-        LevelManager.Win();
     }
 
     public void SlideToLeft()

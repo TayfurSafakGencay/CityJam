@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Enum;
+using Tools;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -8,12 +11,19 @@ namespace Managers
   {
     public static LevelManager Instance;
 
+    public CollectableObjectConfig CollectableObjectConfig;
+    
+    public LevelData LevelData;
+
     [HideInInspector]
     public int Level;
     private void Awake()
     {
       if (Instance == null) Instance = this;
       else Destroy(gameObject);
+      
+      CollectableObjectConfig.Initialize();
+      LevelData.Initialize();
     }
 
     private void Start()
@@ -58,6 +68,8 @@ namespace Managers
 
     private void LoadLevel(int level)
     {
+      SetTargetDataVos();
+      
       if (_levelHandle.IsValid())
       {
         _levelHandle.Release();
@@ -74,5 +86,64 @@ namespace Managers
         EffectManager.Instance.BeforeCloseVignette();
       };
     }
+
+    public Dictionary<CollectableObjectKey, int> TargetDataVos;
+
+    public List<TargetDataVo> GetTargetsData()
+    {
+      List<TargetDataVo> targetDataVos = new();
+      List<LevelCountVo> levelCountVos = LevelData.GetLevelData(Level);
+
+      for (int i = 0; i < levelCountVos.Count; i++)
+      {
+        LevelCountVo item = levelCountVos[i];
+        
+        TargetDataVo vo = new()
+        {
+          CollectableObjectKey = item.CollectableObjectKey,
+          Count = item.Count,
+          Image = CollectableObjectConfig.GetObjectSprite(item.CollectableObjectKey)
+        };    
+        
+        targetDataVos.Add(vo);
+      }
+
+      return targetDataVos;
+    }
+    
+    public void SetTargetDataVos()
+    {
+      TargetDataVos = new Dictionary<CollectableObjectKey, int>();
+      List<LevelCountVo> levelCountVos = LevelData.GetLevelData(Level);
+
+      foreach (LevelCountVo item in levelCountVos)
+      {
+        TargetDataVos.Add(item.CollectableObjectKey, item.Count);
+      }
+    }
+
+    public void CheckWinCondition(CollectableObjectKey collectableObjectKey)
+    {
+      TargetDataVos[collectableObjectKey] -= 3;
+
+      if (TargetDataVos[collectableObjectKey] == 0)
+      {
+        TargetDataVos.Remove(collectableObjectKey);
+      }
+
+      if (TargetDataVos.Count == 0)
+      {
+        Win();
+      }
+    }
+  }
+
+  public class TargetDataVo
+  {
+    public CollectableObjectKey CollectableObjectKey;
+    
+    public int Count;
+
+    public Sprite Image;
   }
 }

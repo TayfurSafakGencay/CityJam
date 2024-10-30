@@ -30,11 +30,7 @@ public class Click : MonoBehaviour
     // Lighting ayarlamalari yapilacak. Light Baking.
     // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
-    // particller eklenecek.
-    // Altin kazanma yapilacak.
+    // particller eklenecek. Countdown icin, Birlesme icin, Oyun sonu icin.
     
-    // InGame panel ve UI yapilacak. shine effect eklenebilir
-    // textler guzel hale getirelecek. Parking orderdan alinabilir.
-    // Settings
-    // Timer
+    // Win ve lose panel. shine effect eklenebilir
 }

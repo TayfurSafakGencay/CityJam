@@ -32,11 +32,6 @@ public class CollectableObject : MonoBehaviour, IClickable
         _outline.enabled = false;
     }
 
-    private void Start()
-    {
-        CollectorManager.Instance.TotalCollectableObjects++;
-    }
-
     public void OnClick()
     {
         if (_clicked) return;
@@ -45,6 +40,7 @@ public class CollectableObject : MonoBehaviour, IClickable
         _outline.enabled = true;
 
         CollectorManager.Instance.FillingCollector(this);
+        CollectorManager.Instance.Clicked(_key);
     }
     
     private const float _moveUpperDuration = 0.4f;
@@ -125,7 +121,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 {
                     collectorViews[1].Remove();
                     CollectorManager.Instance.SlideToLeft();
-                    CollectorManager.Instance.CheckWinCondition();
+                    LevelManager.Instance.CheckWinCondition(_key);
                     Destroy(gameObject);
                 });
             });
