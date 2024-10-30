@@ -31,7 +31,6 @@ public class Click : MonoBehaviour
     // Sound eklenecek.
     // yakinlastirma, uzaaklastirma yapilacak.
     // Water duzenlemesi
-    // Match olması rağmen lose ekranı gelmesi düzeltilecek.
     
     // Text fontu eklenecke.
 }

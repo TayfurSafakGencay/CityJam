@@ -126,6 +126,8 @@ namespace Managers
 
     public void CheckWinCondition(CollectableObjectKey collectableObjectKey)
     {
+      if (!TargetDataVos.ContainsKey(collectableObjectKey)) return;
+      
       TargetDataVos[collectableObjectKey] -= 3;
 
       if (TargetDataVos[collectableObjectKey] == 0)

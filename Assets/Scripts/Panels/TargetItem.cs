@@ -11,6 +11,7 @@ namespace Panels
     [HideInInspector]
     public CollectableObjectKey Key;
 
+    [SerializeField]
     private Image _image;
 
     public TextMeshProUGUI CountText;
@@ -18,11 +19,6 @@ namespace Panels
     public ParticleSystem CounterDownParticle;
 
     private int _count;
-
-    private void Awake()
-    {
-      _image = GetComponent<Image>();
-    }
 
     public void SetInitialValues(Sprite sprite, int count, CollectableObjectKey key)
     {

@@ -69,15 +69,14 @@ namespace Managers
       CheckLoseCondition();
     }
     
-    public async void CheckLoseCondition()
+    public void CheckLoseCondition()
     {
-      await Task.Delay(1000);
-      
       foreach (CollectorView collectorView in CollectorViews)
       {
         if (collectorView.GetCollectableObjectKey() == CollectableObjectKey.None) return;
+        if (!collectorView.IsMatchable()) return;
       }
-      
+
       LevelManager.Lose();
     }
 
