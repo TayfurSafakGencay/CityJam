@@ -28,6 +28,8 @@ namespace Managers
       if (_isVignetteOpen) return;
       _isVignetteOpen = true;
       
+      FrontCam.gameObject.SetActive(false);
+      
       VignetteSingle.mainScale = 0f;
 
       float mainScale = 0f;
@@ -50,6 +52,7 @@ namespace Managers
       if (!_isVignetteOpen) return;
       _isVignetteOpen = false;
       
+
       VignetteSingle.mainScale = 30f;
 
       float mainScale = 30f;
@@ -57,7 +60,10 @@ namespace Managers
       {
         mainScale = x;
         VignetteSingle.mainScale = mainScale;
-      }, 0f, VignetteMainScaleAnimationTime).SetEase(Ease.OutQuad);
+      }, 0f, VignetteMainScaleAnimationTime).SetEase(Ease.OutQuad).OnComplete(() =>
+      {
+        FrontCam.gameObject.SetActive(true);
+      });
     }
 
     public const int VignetteExtraTime = 200;

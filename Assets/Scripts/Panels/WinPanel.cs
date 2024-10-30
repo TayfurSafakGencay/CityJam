@@ -17,6 +17,8 @@ namespace Panels
     public void NextLevel()
     {
       LevelManager.Instance.LoadNextLevel();
+      
+      gameObject.SetActive(false);
     }
   }
 }

@@ -22,10 +22,4 @@ public class Click : MonoBehaviour
             hit.collider.gameObject.GetComponent<IClickable>().OnClick();
         }
     }
-    
-    // TODO: Safak 
-    // Post Processing eklenecek.
-    // Lighting ayarlamalari yapilacak. Light Baking.
-    
-    // Bazı durumlarda bazı objeler kayma yapmıyor.
 }

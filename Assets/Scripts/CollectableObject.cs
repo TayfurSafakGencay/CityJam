@@ -6,6 +6,7 @@ using Enum;
 using Interface;
 using Managers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CollectableObject : MonoBehaviour, IClickable
 {
@@ -20,16 +21,32 @@ public class CollectableObject : MonoBehaviour, IClickable
     
     private Outline _outline;
     
+    private bool _isAnimationPlaying;
+    
     [SerializeField]
     private Vector3 _collectedRotation = new(0, 270, 0);
     
     [SerializeField]
     private Vector3 _collectedScale = new(0.5f, 0.5f, 0.5f);
+    
+    private BoxCollider _boxCollider;
 
     private void Awake()
     {
         _outline = GetComponent<Outline>();
         _outline.enabled = false;
+        
+        _boxCollider = GetComponent<BoxCollider>();
+        
+        GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged()
+    {
+        if (GameManager.Instance.GameState != GameState.Game)
+        {
+            _clicked = true;
+        }
     }
 
     public void OnClick()
@@ -51,6 +68,8 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     public void PlayPlacingAnimation(Vector3 targetPosition)
     {
+        _boxCollider.enabled = false;
+        _isAnimationPlaying = true;
         _clicked = true;
         
         CollectorManager.Instance.Clicked(_key);
@@ -70,6 +89,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 DOVirtual.DelayedCall(_moveToCollectorDuration - 0.1f, () =>
                 {
                     OnAnimationEnd?.Invoke();
+                    _isAnimationPlaying = false;
                 });
             });
         });
@@ -120,13 +140,13 @@ public class CollectableObject : MonoBehaviour, IClickable
             transform.DOMove(transform.position + new Vector3(0, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
-                transform.DOScale(transform.localScale * 1.25f, _matchingAnimationDuration).OnComplete(() =>
+                transform.DOScale(transform.localScale * 1.5f, _matchingAnimationDuration).OnComplete(() =>
                 {
                     collectorViews[1].Remove();
-                    CollectorManager.Instance.SlideToLeft();
                     LevelManager.Instance.CheckWinCondition(_key);
                     ParticleManager.Instance.PlayParticleEffectFromPool(transform.position, VFX.Match);
                     Destroy(gameObject);
+                    CollectorManager.Instance.SlideToLeft();
                 });
             });
         }
@@ -146,6 +166,7 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     public void SlideToLeft(int index)
     {
+        if (_isAnimationPlaying) return;
         if (_isMatched) return;
         if (index == 0) return;
         
@@ -161,7 +182,7 @@ public class CollectableObject : MonoBehaviour, IClickable
     {
         CollectorView collectorView = CollectorManager.Instance.CollectorViews[index];
         float height = collectorView.PlacementHeight;
-        float duration = 0.2f;
+        float duration = 0.1f;
 
         Sequence sequence = DOTween.Sequence();
 

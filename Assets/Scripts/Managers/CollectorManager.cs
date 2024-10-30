@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Collector;
 using Enum;
 using UnityEngine;
@@ -78,8 +79,9 @@ namespace Managers
       LevelManager.Lose();
     }
 
-    public void SlideToLeft()
+    public async void SlideToLeft()
     {
+      await Task.Delay(100);
       for (int i = 0; i < CollectorViews.Count; i++)
       {
         CollectorView collectorView = CollectorViews[i];

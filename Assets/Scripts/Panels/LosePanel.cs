@@ -17,6 +17,8 @@ namespace Panels
     public void RestartLevel()
     {
       LevelManager.Instance.Restart();
+      
+      gameObject.SetActive(false);
     }
   }
 }
