@@ -148,11 +148,24 @@ namespace Collector
         (transform.position.y + PlacementHeight, currentDuration).SetEase(_placingAnimationEase));
     }
 
-    public void MatchingAnimations(List<CollectorView> collectableObjects)
+    public void MatchingAnimations(List<CollectorView> collectableViews)
     {
+      string key = "";
+      if (collectableViews[0] == this)
+      {
+        key = "Left";
+      }
+      else if (collectableViews[1] == this)
+      {
+        key = "Middle";
+      }
+      else if (collectableViews[2] == this)
+      {
+        key = "Right";
+      }
+      
       CollectableObject collectableObject = _collectableObject;
       _placingSequence.Kill();
-      // _placingSequence.Pause();
       _slideTween.Kill();
       collectableObject.SlideSequence.Kill();
       
@@ -166,7 +179,7 @@ namespace Collector
         
         collectableObject.transform.DOMoveY(_initialPosition.y - 0.15f, 0.4f).OnComplete(() =>
         {
-          StartCoroutine(collectableObject.PlayMatchingAnimation(collectableObjects));
+          StartCoroutine(collectableObject.PlayMatchingAnimation(collectableViews, key));
         });
       });
     }

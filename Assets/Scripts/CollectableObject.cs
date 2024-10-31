@@ -126,7 +126,7 @@ public class CollectableObject : MonoBehaviour, IClickable
     
     private const Ease _matchingAnimationEase = Ease.InCubic;
     
-    public IEnumerator PlayMatchingAnimation(List<CollectorView> collectorViews)
+    public IEnumerator PlayMatchingAnimation(List<CollectorView> collectorViews, string key)
     {
         while (_isSliding)
         {
@@ -139,7 +139,7 @@ public class CollectableObject : MonoBehaviour, IClickable
         transform.DOKill();
         print("ff");
         
-        if (collectorViews[0].GetCollectableObject() == this)
+        if (key == "Left")
         {
             print("0" + _key);
             transform.DOMove(transform.position + new Vector3(_matchingAnimationXAxisLeft, _matchingAnimationHeight,0), _matchingAnimationDuration)
@@ -152,7 +152,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 });
             });
         }
-        else if (collectorViews[1].GetCollectableObject() == this)
+        else if (key == "Middle")
         {
             print("1" + _key);
 
@@ -169,7 +169,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 });
             });
         }
-        else if (collectorViews[2].GetCollectableObject() == this)
+        else if (key == "Right")
         {
             print("2" + _key);
 
