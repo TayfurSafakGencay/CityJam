@@ -66,7 +66,7 @@ namespace Managers
       });
     }
 
-    public const int VignetteExtraTime = 200;
+    public const int VignetteExtraTime = 325;
 
     public static async Task WaitVignette()
     {

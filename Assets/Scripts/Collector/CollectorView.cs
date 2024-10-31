@@ -147,6 +147,7 @@ namespace Collector
     {
       _placingSequence.Kill();
       _placingSequence.Pause();
+      _slideTween.Kill();
       
       _collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
       transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
@@ -163,9 +164,10 @@ namespace Collector
       });
     }
     
+    private Tween _slideTween;
     public void SlideToLeft()
     {
-      transform.DOMoveY(_initialPosition.y - PlacementHeight, 0.1f).OnComplete(() =>
+      _slideTween = transform.DOMoveY(_initialPosition.y - PlacementHeight, 0.1f).OnComplete(() =>
       {
         transform.DOMove(_initialPosition, 0.1f);
       });

@@ -33,3 +33,11 @@ MonoBehaviour:
       Count: 6
     - CollectableObjectKey: 7
       Count: 3
+  - Level: 4
+    LevelVos:
+    - CollectableObjectKey: 3
+      Count: 3
+    - CollectableObjectKey: 7
+      Count: 9
+    - CollectableObjectKey: 8
+      Count: 12

@@ -6,7 +6,6 @@ using Enum;
 using Interface;
 using Managers;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class CollectableObject : MonoBehaviour, IClickable
 {
@@ -37,7 +36,10 @@ public class CollectableObject : MonoBehaviour, IClickable
         _outline.enabled = false;
         
         _boxCollider = GetComponent<BoxCollider>();
-        
+    }
+
+    private void Start()
+    {
         GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
     }
 
@@ -90,6 +92,7 @@ public class CollectableObject : MonoBehaviour, IClickable
                 {
                     OnAnimationEnd?.Invoke();
                     _isAnimationPlaying = false;
+                    CollectorManager.Instance.SlideToLeft();
                 });
             });
         });
@@ -180,22 +183,28 @@ public class CollectableObject : MonoBehaviour, IClickable
 
     private void SlideAnimation(int index)
     {
+        if (_isMatched) return;
+
         CollectorView collectorView = CollectorManager.Instance.CollectorViews[index];
         float height = collectorView.PlacementHeight;
-        float duration = 0.1f;
+        const float duration = 0.1f;
 
         Sequence sequence = DOTween.Sequence();
 
         sequence.Append(
-            transform.DOMoveX(collectorView.transform.position.x, duration).SetEase(Ease.Linear) // X ekseni boyunca hareket
+            transform.DOMoveX(collectorView.transform.position.x, duration).SetEase(Ease.Linear)
         );
 
         sequence.Join(
-            transform.DOMoveY(collectorView.transform.position.y + 0.2f, duration / 2).SetEase(Ease.OutQuad) // Y ekseni boyunca yükselme
+            transform.DOMoveY(collectorView.transform.position.y + 0.2f, duration / 2).SetEase(Ease.OutQuad)
                 .OnComplete(() =>
                 {
+                    if (_isMatched) return;
+
                     transform.DOMoveY(collectorView.transform.position.y + height, duration / 2).SetEase(Ease.InQuad).OnComplete(() =>
                     {
+                        if (_isMatched) return;
+
                         CollectorManager.Instance.CollectorViews[index].Slided();
                         SlideToLeft(index);
                     });
