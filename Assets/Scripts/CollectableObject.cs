@@ -137,11 +137,9 @@ public class CollectableObject : MonoBehaviour, IClickable
         _isMatched = true;
         SlideSequence.Kill();
         transform.DOKill();
-        print("ff");
         
         if (key == "Left")
         {
-            print("0" + _key);
             transform.DOMove(transform.position + new Vector3(_matchingAnimationXAxisLeft, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
@@ -154,8 +152,6 @@ public class CollectableObject : MonoBehaviour, IClickable
         }
         else if (key == "Middle")
         {
-            print("1" + _key);
-
             transform.DOMove(transform.position + new Vector3(0, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
@@ -171,8 +167,6 @@ public class CollectableObject : MonoBehaviour, IClickable
         }
         else if (key == "Right")
         {
-            print("2" + _key);
-
             transform.DOMove(transform.position + new Vector3(_matchingAnimationRight, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
                 {

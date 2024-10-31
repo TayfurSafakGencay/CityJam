@@ -81,7 +81,7 @@ namespace Managers
 
     public async void SlideToLeft()
     {
-      await Task.Delay(500);
+      await Task.Delay(900);
       
       for (int i = 0; i < CollectorViews.Count; i++)
       {
