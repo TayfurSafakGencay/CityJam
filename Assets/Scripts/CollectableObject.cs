@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using CandyCoded.HapticFeedback;
 using Collector;
 using DG.Tweening;
 using Enum;
@@ -74,6 +76,8 @@ public class CollectableObject : MonoBehaviour, IClickable
         _isAnimationPlaying = true;
         _clicked = true;
         
+        HapticFeedback.LightFeedback();
+        
         CollectorManager.Instance.Clicked(_key);
         SoundManager.Instance.PlayEffect(SoundManager.Instance.CollectSound);
 
@@ -122,12 +126,22 @@ public class CollectableObject : MonoBehaviour, IClickable
     
     private const Ease _matchingAnimationEase = Ease.InCubic;
     
-    public void PlayMatchingAnimation(List<CollectorView> collectorViews)
+    public IEnumerator PlayMatchingAnimation(List<CollectorView> collectorViews)
     {
+        while (_isSliding)
+        {
+            _slidePermission = false;
+            yield return null;
+        }
+
         _isMatched = true;
+        SlideSequence.Kill();
+        transform.DOKill();
+        print("ff");
         
         if (collectorViews[0].GetCollectableObject() == this)
         {
+            print("0" + _key);
             transform.DOMove(transform.position + new Vector3(_matchingAnimationXAxisLeft, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
@@ -140,6 +154,8 @@ public class CollectableObject : MonoBehaviour, IClickable
         }
         else if (collectorViews[1].GetCollectableObject() == this)
         {
+            print("1" + _key);
+
             transform.DOMove(transform.position + new Vector3(0, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
             {
@@ -148,13 +164,15 @@ public class CollectableObject : MonoBehaviour, IClickable
                     collectorViews[1].Remove();
                     LevelManager.Instance.CheckWinCondition(_key);
                     ParticleManager.Instance.PlayParticleEffectFromPool(transform.position, VFX.Match);
-                    Destroy(gameObject);
                     CollectorManager.Instance.SlideToLeft();
+                    Destroy(gameObject);
                 });
             });
         }
         else if (collectorViews[2].GetCollectableObject() == this)
         {
+            print("2" + _key);
+
             transform.DOMove(transform.position + new Vector3(_matchingAnimationRight, _matchingAnimationHeight,0), _matchingAnimationDuration)
                 .SetEase(_matchingAnimationEase).OnComplete(() =>
                 {
@@ -167,10 +185,24 @@ public class CollectableObject : MonoBehaviour, IClickable
         }
     }
 
+    private void Destroy()
+    {
+        
+    }
+    
+    public Sequence SlideSequence;
+
+    private bool _isSliding = false;
+
+    private bool _slidePermission = true;
+
     public void SlideToLeft(int index)
     {
+        _isSliding = false;
+        
         if (_isAnimationPlaying) return;
         if (_isMatched) return;
+        if (!_slidePermission) return;
         if (index == 0) return;
         
         index--;
@@ -178,6 +210,7 @@ public class CollectableObject : MonoBehaviour, IClickable
         if (CollectorManager.Instance.CollectorViews[index].GetCollectableObjectKey() != CollectableObjectKey.None) return;
         CollectorManager.Instance.CollectorViews[index].Filling(this, false);
         CollectorManager.Instance.CollectorViews[index + 1].Remove();
+        _isSliding = true;
         SlideAnimation(index);
     }
 
@@ -187,15 +220,15 @@ public class CollectableObject : MonoBehaviour, IClickable
 
         CollectorView collectorView = CollectorManager.Instance.CollectorViews[index];
         float height = collectorView.PlacementHeight;
-        const float duration = 0.1f;
+        const float duration = 0.2f;
 
-        Sequence sequence = DOTween.Sequence();
+        SlideSequence = DOTween.Sequence();
 
-        sequence.Append(
+        SlideSequence.Append(
             transform.DOMoveX(collectorView.transform.position.x, duration).SetEase(Ease.Linear)
         );
 
-        sequence.Join(
+        SlideSequence.Join(
             transform.DOMoveY(collectorView.transform.position.y + 0.2f, duration / 2).SetEase(Ease.OutQuad)
                 .OnComplete(() =>
                 {

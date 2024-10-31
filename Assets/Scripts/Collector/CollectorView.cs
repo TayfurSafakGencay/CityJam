@@ -16,6 +16,8 @@ namespace Collector
     
     private bool _isMatched;
     
+    private bool _isSliding;
+    
     private CollectorManager _collectorManager;
     
     private Vector3 _initialPosition;
@@ -39,7 +41,7 @@ namespace Collector
       }
     }
 
-    public void Filling(CollectableObject collectableObject, bool isNew = true)
+    public void Filling(CollectableObject collectableObject, bool isNew = true, bool isSliding = false)
     {
       _collectableObject = collectableObject;
       _isAnimationPlaying = true;
@@ -47,6 +49,7 @@ namespace Collector
       collectableObject.OnAnimationEnd += Fill;
       if (isNew) 
         PlacingAnimation();
+      if (isSliding) _isSliding = true;
     }
 
     private void Fill()
@@ -60,6 +63,7 @@ namespace Collector
 
     public void Slided()
     {
+      _isSliding = false;
       _isAnimationPlaying = false;
       
       _collectorManager.CheckMatching(_collectableObject.GetKey());
@@ -78,6 +82,7 @@ namespace Collector
       _isFilled = false;
       _isMatched = false;
       _isAnimationPlaying = false;
+      _isSliding = false;
 
       if (_collectableObject == null) return;
       _collectableObject.OnAnimationEnd -= Fill;
@@ -96,7 +101,7 @@ namespace Collector
 
     public bool IsMatchable()
     {
-      return !_isAnimationPlaying && _isFilled && !_isMatched;
+      return !_isAnimationPlaying && _isFilled && !_isMatched && !_isSliding;
     }
     
     #region Animtions
@@ -145,11 +150,13 @@ namespace Collector
 
     public void MatchingAnimations(List<CollectorView> collectableObjects)
     {
+      CollectableObject collectableObject = _collectableObject;
       _placingSequence.Kill();
-      _placingSequence.Pause();
+      // _placingSequence.Pause();
       _slideTween.Kill();
+      collectableObject.SlideSequence.Kill();
       
-      _collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
+      collectableObject.transform.DOMoveY(_initialPosition.y + PlacementHeight, 0.1f);
       transform.DOMoveY(_initialPosition.y, 0.1f).OnComplete(() =>
       {
         transform.DOMoveY(_initialPosition.y - PlacementHeight - 0.15f, 0.4f).OnComplete(() =>
@@ -157,9 +164,9 @@ namespace Collector
           transform.DOMove(_initialPosition, 0.5f);
         });
         
-        _collectableObject.transform.DOMoveY(_initialPosition.y - 0.15f, 0.4f).OnComplete(() =>
+        collectableObject.transform.DOMoveY(_initialPosition.y - 0.15f, 0.4f).OnComplete(() =>
         {
-          _collectableObject.PlayMatchingAnimation(collectableObjects);
+          StartCoroutine(collectableObject.PlayMatchingAnimation(collectableObjects));
         });
       });
     }
